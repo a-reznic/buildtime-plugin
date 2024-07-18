@@ -1,12 +1,15 @@
+import com.vanniktech.maven.publish.GradlePublishPlugin
+import com.vanniktech.maven.publish.SonatypeHost
 
 plugins {
     application
-    kotlin("jvm").version ("2.0.0")
+    kotlin("jvm").version("2.0.0")
     id("java-gradle-plugin")
-    id("com.gradle.plugin-publish").version ("1.2.1")
+    id("com.gradle.plugin-publish").version("1.2.1")
     kotlin("plugin.serialization").version("2.0.0")
-//    id("com.reznicsoftware.buildtime").version ("0.0.3")
+    id("com.vanniktech.maven.publish").version ("0.29.0")
 }
+
 repositories {
     mavenCentral()
     mavenLocal()
@@ -14,7 +17,7 @@ repositories {
 }
 
 group = "com.reznicsoftware.buildtime"
-version = "0.0.3"
+version = "0.1.0"
 
 gradlePlugin {
     plugins {
@@ -42,4 +45,39 @@ tasks.test {
 
 kotlin {
     jvmToolchain(8)
+}
+
+mavenPublishing {
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+    signAllPublications()
+
+    mavenPublishing {
+        coordinates(project.group.toString(), "test-plugin", project.version.toString())
+
+        pom {
+            name.set("TestPlugin")
+            description.set("Test build gradle time")
+            inceptionYear.set("2024")
+            url.set("https://github.com/a-reznic/buildtime-test-plugin.git")
+            licenses {
+                license {
+                    name.set("The Apache License, Version 2.0")
+                    url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                    distribution.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                }
+            }
+            developers {
+                developer {
+                    id.set("a-reznic")
+                    name.set("Alexandru Reznic")
+                    url.set("https://github.com/a-reznic/")
+                }
+            }
+            scm {
+                url.set("https://github.com/a-reznic/buildtime-test-plugin")
+                connection.set("scm:git:https://github.com/a-reznic/buildtime-test-plugin.git")
+            }
+        }
+    }
+    configure(GradlePublishPlugin())
 }

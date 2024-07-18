@@ -27,7 +27,7 @@ class TestPlugin : Plugin<Project> {
     }
 
     fun sendReport(time: Long) {
-        var sendData = true
+        var sendData = false
         var androidStudioVersion: String? = null
         var baseUrl = "https://buildtime.reznicsoftware.com"
 

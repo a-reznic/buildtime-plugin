@@ -14,6 +14,7 @@ fun main() {
     println(SysInfo.getCpuCores())
     println(SysInfo.getMemorySize())
     println(SysInfo.getDiskInfo())
+    println(SysInfo.getMemoryInfo())
 }
 
 object SysInfo {
@@ -43,7 +44,7 @@ object SysInfo {
         val processorIdentifier: String = centralProcessor.processorIdentifier.processorID
         val processors: Int = centralProcessor.logicalProcessorCount
 
-        return "$vendor#$hardwareUUID#$processorSerialNumber#$processorIdentifier#$processors"
+        return "$vendor-$hardwareUUID-$processorSerialNumber-$processorIdentifier-$processors"
     }
 
     fun getJavaVersion(): String {
