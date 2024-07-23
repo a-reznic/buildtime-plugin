@@ -4,7 +4,13 @@ import oshi.SystemInfo
 import oshi.hardware.CentralProcessor
 import oshi.hardware.ComputerSystem
 import oshi.hardware.HardwareAbstractionLayer
+import oshi.hardware.PhysicalMemory
 import oshi.software.os.OperatingSystem
+
+fun String.getMaxChars(length: Int): String {
+    if (this.length < length) return this
+    return this.substring(0, length)
+}
 
 fun main() {
     println(SysInfo.getDeviceId())
@@ -38,13 +44,13 @@ object SysInfo {
         val centralProcessor: CentralProcessor = hardwareAbstractionLayer.processor
         val computerSystem: ComputerSystem = hardwareAbstractionLayer.computerSystem
 
-        val vendor: String = operatingSystem.manufacturer
-        val hardwareUUID: String = computerSystem.hardwareUUID
-        val processorSerialNumber: String = computerSystem.serialNumber
-        val processorIdentifier: String = centralProcessor.processorIdentifier.processorID
+        val vendor: String = operatingSystem.manufacturer.replace(" ","")
+        val hardwareUUID: String = computerSystem.hardwareUUID.replace("-","").replace(" ","")
+        val processorSerialNumber: String = computerSystem.serialNumber.replace(" ", "")
+        val processorIdentifier: String = centralProcessor.processorIdentifier.processorID.replace(" ","")
         val processors: Int = centralProcessor.logicalProcessorCount
 
-        return "$vendor-$hardwareUUID-$processorSerialNumber-$processorIdentifier-$processors"
+        return "$vendor$hardwareUUID$processorSerialNumber$processorIdentifier$processors"
     }
 
     fun getJavaVersion(): String {
@@ -62,7 +68,10 @@ object SysInfo {
 
     fun getMemoryInfo(): String {
         val hardware: HardwareAbstractionLayer = systemInfo.hardware
-        return hardware.memory.physicalMemory.toString()
+        return hardware.memory.physicalMemory
+            .mapIndexed { index: Int, m: PhysicalMemory? ->
+                "$index-${m?.capacity}-${m?.memoryType}-${m?.clockSpeed}"
+            }.joinToString { it }
     }
 
     fun getCpuCores(): Int {
