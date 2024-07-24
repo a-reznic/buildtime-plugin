@@ -13,6 +13,8 @@ import org.gradle.api.execution.TaskActionListener
 import org.gradle.api.initialization.Settings
 import org.gradle.api.invocation.Gradle
 
+const val BASE_URL = "https://buildtime.reznicsoftware.com/add"
+
 class TestPlugin : Plugin<Project> {
     private var project: Project? = null
     private var startTime: Long = -1
@@ -23,20 +25,20 @@ class TestPlugin : Plugin<Project> {
         project.extensions.create("buildTimeOptions", BuildTimeOptionsExtension::class.java)
         project.gradle.addBuildListener(object : BuildListener {
             override fun settingsEvaluated(settings: Settings) {
-                println("BuildTimePlugin: projectsLoaded")
+//                println("BuildTimePlugin: projectsLoaded")
             }
 
             override fun projectsLoaded(gradle: Gradle) {
-                println("BuildTimePlugin: projectsLoaded")
+//                println("BuildTimePlugin: projectsLoaded")
                 startTime = -1
             }
 
             override fun projectsEvaluated(gradle: Gradle) {
-                println("BuildTimePlugin: projectsLoaded")
+//                println("BuildTimePlugin: projectsLoaded")
             }
 
             override fun buildFinished(result: BuildResult) {
-                println("buildFinished")
+//                println("buildFinished")
                 if (startTime > 0) {
                     sendReport(System.currentTimeMillis() - startTime)
                 }
@@ -44,28 +46,28 @@ class TestPlugin : Plugin<Project> {
         })
         project.gradle.addListener(object : TaskActionListener {
             override fun beforeActions(task: Task) {
-                println("before: ${task.name}")
+//                println("before: ${task.name}")
                 if (task.name == "clean") {
                     startTime = System.currentTimeMillis()
                 }
             }
 
             override fun afterActions(task: Task) {
-                println("after: ${task.name}")
+//                println("after: ${task.name}")
             }
         })
         project.gradle.projectsEvaluated {
             startTime = System.currentTimeMillis()
         }
         project.gradle.buildFinished {
-            println("project.gradle.buildFinished")
+//            println("project.gradle.buildFinished")
         }
     }
 
     fun sendReport(time: Long) {
         var sendData = false
         var androidStudioVersion: String? = null
-        var baseUrl = "https://buildtime.reznicsoftware.com/add"
+        var baseUrl = BASE_URL
 
         project?.let {
             val ext = it.extensions.getByName("buildTimeOptions") as? BuildTimeOptionsExtension
@@ -87,7 +89,7 @@ class TestPlugin : Plugin<Project> {
         if (isOnlyClean) {
             sendData = false
         }
-        println("BuildTimePlugin sendData: $sendData")
+        println("BuildTimePlugin start")
 
         val data = ResultDTO(
             deviceId = SysInfo.getDeviceId(),
