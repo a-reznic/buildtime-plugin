@@ -31,13 +31,11 @@ class BackendApi(private val url: String) {
                     setBody(data)
                 }
 
-                val message = response.bodyAsText()
-
-                println(message)
+                println(response.bodyAsText())
             } catch (ex: IOException) {
                 println(ex)
             }
-            println("finish send data to backend...")
+            println("successfully send data to backend...")
         }
     }
 }

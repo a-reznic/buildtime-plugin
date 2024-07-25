@@ -46,11 +46,10 @@ object SysInfo {
 
         val vendor: String = operatingSystem.manufacturer.replace(" ","")
         val hardwareUUID: String = computerSystem.hardwareUUID.replace("-","").replace(" ","")
-        val processorSerialNumber: String = computerSystem.serialNumber.replace(" ", "")
-        val processorIdentifier: String = centralProcessor.processorIdentifier.processorID.replace(" ","")
+         val processorIdentifier: String = centralProcessor.processorIdentifier.processorID.replace(" ","")
         val processors: Int = centralProcessor.logicalProcessorCount
 
-        return "$vendor$hardwareUUID$processorSerialNumber$processorIdentifier$processors"
+        return "$vendor$hardwareUUID$processorIdentifier$processors"
     }
 
     fun getJavaVersion(): String {

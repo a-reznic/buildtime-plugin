@@ -7,6 +7,7 @@ import org.gradle.api.tasks.Nested
 abstract class BuildTimeInfoExtension {
     abstract val androidStudioVersion: Property<String>
     abstract val serverURL: Property<String>
+    abstract val deviceName: Property<String>
 }
 
 abstract class BuildTimeOptionsExtension {

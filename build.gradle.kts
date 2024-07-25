@@ -17,7 +17,7 @@ repositories {
 }
 
 group = "com.reznicsoftware.buildtime"
-version = "0.1.3"
+version = "0.1.5"
 
 gradlePlugin {
     plugins {
@@ -25,10 +25,10 @@ gradlePlugin {
             id = group.toString()
             implementationClass = "com.reznicsoftware.buildtime.TestPlugin"
             version = version
-
         }
     }
 }
+
 dependencies {
     implementation("com.github.oshi:oshi-core:6.6.1")
 
