@@ -12,17 +12,6 @@ fun String.getMaxChars(length: Int): String {
     return this.substring(0, length)
 }
 
-fun main() {
-    println(SysInfo.getDeviceId())
-    println(SysInfo.getOSIdentifier())
-    println(SysInfo.getJavaVersion())
-    println(SysInfo.getCPUIdentifier())
-    println(SysInfo.getCpuCores())
-    println(SysInfo.getMemorySize())
-    println(SysInfo.getDiskInfo())
-    println(SysInfo.getMemoryInfo())
-}
-
 object SysInfo {
     private val systemInfo = SystemInfo()
 
@@ -44,9 +33,9 @@ object SysInfo {
         val centralProcessor: CentralProcessor = hardwareAbstractionLayer.processor
         val computerSystem: ComputerSystem = hardwareAbstractionLayer.computerSystem
 
-        val vendor: String = operatingSystem.manufacturer.replace(" ","")
-        val hardwareUUID: String = computerSystem.hardwareUUID.replace("-","").replace(" ","")
-         val processorIdentifier: String = centralProcessor.processorIdentifier.processorID.replace(" ","")
+        val vendor: String = operatingSystem.manufacturer.replace(" ", "")
+        val hardwareUUID: String = computerSystem.hardwareUUID.replace("-", "").replace(" ", "")
+        val processorIdentifier: String = centralProcessor.processorIdentifier.processorID.replace(" ", "")
         val processors: Int = centralProcessor.logicalProcessorCount
 
         return "$vendor$hardwareUUID$processorIdentifier$processors"

@@ -101,7 +101,7 @@ class TestPlugin : Plugin<Project> {
                 }
             }
         }
-
+        
         println("System info:")
         val data = ResultDTO(
             deviceId = SysInfo.getDeviceId(),
