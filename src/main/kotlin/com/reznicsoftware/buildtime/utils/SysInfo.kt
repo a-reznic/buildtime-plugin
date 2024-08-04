@@ -1,5 +1,7 @@
 package com.reznicsoftware.buildtime.utils
 
+import com.reznicsoftware.buildtime.PLUGIN_VERSION
+import com.reznicsoftware.buildtime.dto.*
 import oshi.SystemInfo
 import oshi.hardware.CentralProcessor
 import oshi.hardware.ComputerSystem
@@ -15,15 +17,39 @@ fun String.getMaxChars(length: Int): String {
 object SysInfo {
     private val systemInfo = SystemInfo()
 
-    fun getDiskInfo(): String {
-        val hardware: HardwareAbstractionLayer = systemInfo.hardware
-
-        val diskStores = hardware.diskStores.firstOrNull()
-        return "${diskStores?.model}#${diskStores?.size}"
+    fun getAll(): InputResultDTO {
+        return InputResultDTO(
+            deviceId = getDeviceId(),
+            cpu = cpuInfo(),
+            hdd = getDiskInfo(),
+            os = getOSIdentifier(),
+            ram = ramInfo(),
+            javaVersion = getJavaVersion(),
+            pluginVersion = PLUGIN_VERSION.trim(),
+        )
     }
 
-    fun getOSIdentifier(): String {
-        return listOf("os.name", "os.version", "os.arch").joinToString("_") { System.getProperty(it) }
+    fun getDiskInfo(): HardDriveDTO {
+        val hardware: HardwareAbstractionLayer = systemInfo.hardware
+
+        val diskStores = hardware.diskStores.map {
+            HardDriveInfoDTO(
+                model = it?.model.orEmpty(),
+                size = it?.size
+            )
+        }
+
+        return HardDriveDTO(
+            list = diskStores
+        )
+    }
+
+    fun getOSIdentifier(): OsDTO {
+        return OsDTO(
+            name = System.getProperty("os.name"),
+            version = System.getProperty("os.version"),
+            arch = System.getProperty("os.arch")
+        )
     }
 
     fun getDeviceId(): String {
@@ -32,10 +58,10 @@ object SysInfo {
         val hardwareAbstractionLayer: HardwareAbstractionLayer = systemInfo.hardware
         val centralProcessor: CentralProcessor = hardwareAbstractionLayer.processor
         val computerSystem: ComputerSystem = hardwareAbstractionLayer.computerSystem
-
-        val vendor: String = operatingSystem.manufacturer.replace(" ", "")
-        val hardwareUUID: String = computerSystem.hardwareUUID.replace("-", "").replace(" ", "")
-        val processorIdentifier: String = centralProcessor.processorIdentifier.processorID.replace(" ", "")
+        //
+        val vendor: String = operatingSystem.manufacturer.replaceSpace()
+        val hardwareUUID: String = computerSystem.hardwareUUID.replaceSpace().replace("-", "")
+        val processorIdentifier: String = centralProcessor.processorIdentifier.processorID.replaceSpace()
         val processors: Int = centralProcessor.logicalProcessorCount
 
         return "$vendor$hardwareUUID$processorIdentifier$processors"
@@ -49,29 +75,33 @@ object SysInfo {
         ).joinToString("_") { System.getProperty(it) }
     }
 
-    fun getMemorySize(): Long {
-        val hardware: HardwareAbstractionLayer = systemInfo.hardware
-        return hardware.memory.total
+    fun ramInfo(): RamDTO {
+        return RamDTO(
+            list = systemInfo.hardware.memory.physicalMemory.map { m: PhysicalMemory? ->
+                MemoryInfoDTO(
+                    memoryType = m?.memoryType,
+                    capacity = m?.capacity,
+                    clockSpeed = m?.clockSpeed,
+                    manufacturer = m?.manufacturer
+                )
+            },
+            total = systemInfo.hardware.memory.total,
+            availability = systemInfo.hardware.memory.available
+        )
     }
 
-    fun getMemoryInfo(): String {
-        val hardware: HardwareAbstractionLayer = systemInfo.hardware
-        return hardware.memory.physicalMemory
-            .mapIndexed { index: Int, m: PhysicalMemory? ->
-                "$index-${m?.capacity}-${m?.memoryType}-${m?.clockSpeed}"
-            }.joinToString { it }
-    }
+    fun cpuInfo(): CpuDTO {
+        val processor: CentralProcessor = systemInfo.hardware.processor
 
-    fun getCpuCores(): Int {
-        val hardwareAbstractionLayer: HardwareAbstractionLayer = systemInfo.hardware
-        val centralProcessor: CentralProcessor = hardwareAbstractionLayer.processor
-
-        return centralProcessor.physicalProcessorCount
+        return CpuDTO(
+            name = processor.processorIdentifier.name,
+            physicalCount = processor.physicalProcessorCount,
+            logicalCount = processor.logicalProcessorCount,
+            archictecture = processor.processorIdentifier.microarchitecture,
+        )
     }
+}
 
-    fun getCPUIdentifier(): String {
-        val hardwareAbstractionLayer: HardwareAbstractionLayer = systemInfo.hardware
-        val centralProcessor: CentralProcessor = hardwareAbstractionLayer.processor
-        return centralProcessor.processorIdentifier.name
-    }
+fun String.replaceSpace(): String {
+    return this.replace(" ", "")
 }

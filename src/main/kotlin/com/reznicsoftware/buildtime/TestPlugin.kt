@@ -1,7 +1,7 @@
 package com.reznicsoftware.buildtime
 
 import com.reznicsoftware.buildtime.api.BackendApi
-import com.reznicsoftware.buildtime.api.ResultDTO
+import com.reznicsoftware.buildtime.dto.*
 import com.reznicsoftware.buildtime.utils.SysInfo
 import com.reznicsoftware.buildtime.utils.getMaxChars
 import kotlinx.serialization.encodeToString
@@ -101,24 +101,16 @@ class TestPlugin : Plugin<Project> {
                 }
             }
         }
-        
+
         println("System info:")
-        val data = ResultDTO(
-            deviceId = SysInfo.getDeviceId(),
-            cpu = SysInfo.getCPUIdentifier(),
-            cores = SysInfo.getCpuCores(),
-            pluginVersion = PLUGIN_VERSION.trim(),
+        val data = SysInfo.getAll().copy(
             androidStudioVersion = androidStudioVersion?.getMaxChars(30_000),
             deviceName = deviceName?.getMaxChars(1_000),
             projectName = project?.rootProject?.name.toString(),
-            memorySize = SysInfo.getMemorySize(),
-            memoryInfo = SysInfo.getMemoryInfo(),
-            javaVersion = SysInfo.getJavaVersion(),
-            os = SysInfo.getOSIdentifier(),
             durationSeconds = time / 1000
         )
 
-        println(json.encodeToString<ResultDTO>(data))
+        println(json.encodeToString<InputResultDTO>(data))
 
         if (sendData) {
             BackendApi(baseUrl).sendData(data)

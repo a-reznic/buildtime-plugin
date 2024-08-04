@@ -1,5 +1,6 @@
 package com.reznicsoftware.buildtime.api
 
+import com.reznicsoftware.buildtime.dto.InputResultDTO
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.contentnegotiation.*
@@ -13,7 +14,7 @@ import java.io.IOException
 
 class BackendApi(private val url: String) {
 
-    fun sendData(data: ResultDTO) {
+    fun sendData(data: InputResultDTO) {
 
         val client = HttpClient(CIO) {
             install(ContentNegotiation) {

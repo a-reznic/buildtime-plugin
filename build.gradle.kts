@@ -7,7 +7,7 @@ plugins {
     id("java-gradle-plugin")
     id("com.gradle.plugin-publish").version("1.2.1")
     kotlin("plugin.serialization").version("2.0.0")
-    id("com.vanniktech.maven.publish").version ("0.29.0")
+    id("com.vanniktech.maven.publish").version("0.29.0")
 }
 
 repositories {
@@ -17,7 +17,7 @@ repositories {
 }
 
 group = "com.reznicsoftware.buildtime"
-version = "0.1.5"
+version = "0.2.0"
 
 gradlePlugin {
     plugins {
@@ -28,7 +28,9 @@ gradlePlugin {
         }
     }
 }
-
+tasks.test {
+    useJUnitPlatform()
+}
 dependencies {
     implementation("com.github.oshi:oshi-core:6.6.1")
 
@@ -37,6 +39,8 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+
+    testImplementation("org.jetbrains.kotlin:kotlin-test")
 }
 
 tasks.test {
