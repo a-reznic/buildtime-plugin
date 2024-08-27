@@ -1,1 +1,1 @@
-Plugin that collects data for https://buildtime.reznicsoftware.com/ 
+Plugin that collects data for https://compilebenchmark.com/ 
