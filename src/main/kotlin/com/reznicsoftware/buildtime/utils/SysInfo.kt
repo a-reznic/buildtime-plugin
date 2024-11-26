@@ -29,7 +29,7 @@ object SysInfo {
         )
     }
 
-    fun getDiskInfo(): HardDriveDTO {
+    private fun getDiskInfo(): HardDriveDTO {
         val hardware: HardwareAbstractionLayer = systemInfo.hardware
 
         val diskStores = hardware.diskStores.map {
@@ -44,7 +44,7 @@ object SysInfo {
         )
     }
 
-    fun getOSIdentifier(): OsDTO {
+    private fun getOSIdentifier(): OsDTO {
         return OsDTO(
             name = System.getProperty("os.name"),
             version = System.getProperty("os.version"),
@@ -52,7 +52,7 @@ object SysInfo {
         )
     }
 
-    fun getDeviceId(): String {
+    private fun getDeviceId(): String {
         val systemInfo = SystemInfo()
         val operatingSystem: OperatingSystem = systemInfo.operatingSystem
         val hardwareAbstractionLayer: HardwareAbstractionLayer = systemInfo.hardware
@@ -67,7 +67,7 @@ object SysInfo {
         return "$vendor$hardwareUUID$processorIdentifier$processors"
     }
 
-    fun getJavaVersion(): String {
+    private fun getJavaVersion(): String {
         return listOf(
             "java.vm.name",
             "java.vm.vendor",
@@ -75,7 +75,7 @@ object SysInfo {
         ).joinToString("_") { System.getProperty(it) }
     }
 
-    fun ramInfo(): RamDTO {
+    private fun ramInfo(): RamDTO {
         return RamDTO(
             list = systemInfo.hardware.memory.physicalMemory.map { m: PhysicalMemory? ->
                 MemoryInfoDTO(
@@ -90,7 +90,7 @@ object SysInfo {
         )
     }
 
-    fun cpuInfo(): CpuDTO {
+    private fun cpuInfo(): CpuDTO {
         val processor: CentralProcessor = systemInfo.hardware.processor
 
         return CpuDTO(

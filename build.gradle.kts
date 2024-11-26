@@ -32,9 +32,9 @@ tasks.test {
     useJUnitPlatform()
 }
 dependencies {
-    implementation("com.github.oshi:oshi-core:6.6.1")
+    implementation("com.github.oshi:oshi-core:6.6.5")
 
-    val ktorVersion = "2.3.12"
+    val ktorVersion = "2.3.13"
     implementation("io.ktor:ktor-client-core:$ktorVersion")
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")

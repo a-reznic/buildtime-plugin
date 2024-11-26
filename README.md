@@ -1,1 +1,1 @@
-Plugin that collects data for https://compilebenchmark.com/ 
+A plugin that collects data https://compilebenchmark.com/ 
